@@ -1,25 +1,51 @@
 "use client";
 import { useState, useEffect } from "react";
-import { DEFAULT_CONFIG, withDefaults, type SiteConfig } from "@/lib/siteConfig";
 
-export type { SiteConfig };
+export interface SiteConfig {
+  heroTitle: string;
+  heroSubtitle: string;
+  aboutText: string;
+  photoURL: string;
+  photoFocus: string;
+  location: string;
+  age: string;
+  email: string;
+  phone: string;
+  github: string;
+  linkedin: string;
+  twitter: string;
+  instagram: string;
+  website: string;
+  updatedAt: string;
+}
 
-/**
- * Returns the live site config. Fields are spread at the top level for
- * backward compatibility (`cfg.heroTitle`), plus `loaded` and the full
- * `config` object are available.
- */
+const DEFAULTS: SiteConfig = {
+  heroTitle: "Your Name",
+  heroSubtitle: "Creative Developer",
+  aboutText: "Building things for the web.",
+  photoURL: "",
+  photoFocus: "50% 30%",
+  location: "Your City",
+  age: "",
+  email: "hello@example.com",
+  phone: "",
+  github: "",
+  linkedin: "",
+  twitter: "",
+  instagram: "",
+  website: "",
+  updatedAt: "",
+};
+
 export function useSiteConfig() {
-  const [config, setConfig] = useState<SiteConfig>(DEFAULT_CONFIG);
-  const [loaded, setLoaded] = useState(false);
+  const [config, setConfig] = useState<SiteConfig>(DEFAULTS);
 
   useEffect(() => {
     fetch("/api/config")
       .then((r) => r.json())
-      .then((d) => setConfig(withDefaults(d)))
-      .catch(() => {})
-      .finally(() => setLoaded(true));
+      .then((d) => setConfig({ ...DEFAULTS, ...d }))
+      .catch(() => {});
   }, []);
 
-  return { ...config, config, loaded };
+  return config;
 }

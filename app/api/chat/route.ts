@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDoc } from "@/lib/store";
-
-export const dynamic = "force-dynamic";
+import { readJson } from "@/lib/localDb";
 
 interface Message { role: "user" | "assistant"; content: string; }
 
@@ -14,13 +12,13 @@ interface AiSettings {
   assistantName: string;
 }
 
-// Build the full site context from all stored documents
-async function buildSiteContext(): Promise<string> {
+// Build the full site context from all JSON data files
+function buildSiteContext(): string {
   try {
-    const config    = await getDoc<Record<string, string>>("config", {});
-    const projects  = await getDoc<{ items: Record<string, unknown>[] }>("projects", { items: [] });
-    const career    = await getDoc<{ intro: string; sections: { title: string; items: Record<string, string>[] }[] }>("career", { intro: "", sections: [] });
-    const skills    = await getDoc<{ groups: { name: string; items: string[] }[] }>("skills", { groups: [] });
+    const config    = readJson<Record<string, string>>("config.json");
+    const projects  = readJson<{ items: Record<string, unknown>[] }>("projects.json");
+    const career    = readJson<{ intro: string; sections: { title: string; items: Record<string, string>[] }[] }>("career.json");
+    const skills    = readJson<{ groups: { name: string; items: string[] }[] }>("skills.json");
 
     const projectList = projects.items.map(p =>
       `• ${p.title} (${p.category}, ${p.year}): ${p.description}. Tech: ${(p.tech as string[]).join(", ")}. ${p.link ? `Link: ${p.link}` : ""}`
@@ -166,8 +164,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
-    const settings = await getDoc<AiSettings>("ai-settings", {} as AiSettings);
-    const siteContext = await buildSiteContext();
+    const settings = readJson<AiSettings>("ai-settings.json");
+    const siteContext = buildSiteContext();
 
     const systemPrompt = `You are a concise AI assistant for a personal portfolio website. Answer questions about the portfolio owner using ONLY the data below.
 

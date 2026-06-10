@@ -1,23 +1,18 @@
 import { NextResponse } from "next/server";
-import { getDoc, setDoc } from "@/lib/store";
-import { cookies } from "next/headers";
-
-export const dynamic = "force-dynamic";
+import { readJson, writeJson } from "@/lib/localDb";
 
 export async function GET() {
   try {
-    return NextResponse.json(await getDoc("career", { intro: "", sections: [] }));
+    return NextResponse.json(readJson("career.json"));
   } catch {
-    return NextResponse.json({ intro: "", sections: [] }, { status: 200 });
+    return NextResponse.json({}, { status: 500 });
   }
 }
 
 export async function PUT(req: Request) {
-  const jar = await cookies();
-  if (!jar.get("admin_session")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const body = await req.json();
-    await setDoc("career", body);
+    writeJson("career.json", body);
     return NextResponse.json(body);
   } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });

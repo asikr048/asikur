@@ -2,27 +2,23 @@
 
 @layer base {
   :root {
-    /* Theme tokens — overridden at runtime from admin config (see layout.tsx). */
-    --p: 185 100% 48%;
-    --p2: 210 100% 40%;
-    --bg: 210 100% 4%;
     --background: 210 100% 4%;
     --foreground: 195 80% 95%;
     --card: 210 60% 8%;
     --card-foreground: 195 80% 95%;
-    --primary: var(--p);
+    --primary: 185 100% 48%;
     --primary-foreground: 210 100% 4%;
     --secondary: 210 40% 14%;
     --secondary-foreground: 195 80% 95%;
     --muted: 210 40% 12%;
     --muted-foreground: 210 20% 55%;
-    --accent: var(--p);
+    --accent: 185 100% 48%;
     --accent-foreground: 210 100% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 210 30% 18%;
     --input: 210 30% 18%;
-    --ring: var(--p);
+    --ring: 185 100% 48%;
     --radius: 1rem;
   }
 }
@@ -46,21 +42,17 @@
 
 html { scroll-behavior: smooth; }
 
-/* Hide scrollbar (mobile nav) */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: hsl(var(--p) / 0.3); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: hsl(185 100% 48% / 0.3); border-radius: 99px; }
 
 /* Glow effect */
 .glow-teal {
-  box-shadow: 0 0 20px hsl(var(--p) / 0.15), 0 0 60px hsl(var(--p) / 0.05);
+  box-shadow: 0 0 20px hsl(185 100% 48% / 0.15), 0 0 60px hsl(185 100% 48% / 0.05);
 }
 .text-glow {
-  text-shadow: 0 0 20px hsl(var(--p) / 0.5);
+  text-shadow: 0 0 20px hsl(185 100% 48% / 0.5);
 }
 
 /* Glass card */
@@ -68,10 +60,10 @@ html { scroll-behavior: smooth; }
   background: hsl(210 60% 8% / 0.6);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid hsl(var(--p) / 0.1);
+  border: 1px solid hsl(185 100% 48% / 0.1);
 }
 .glass:hover {
-  border-color: hsl(var(--p) / 0.25);
+  border-color: hsl(185 100% 48% / 0.25);
 }
 
 /* Page fade in */
@@ -85,9 +77,9 @@ html { scroll-behavior: smooth; }
 
 /* Pulse ring */
 @keyframes pulseRing {
-  0%   { box-shadow: 0 0 0 0 hsl(var(--p) / 0.4); }
-  70%  { box-shadow: 0 0 0 12px hsl(var(--p) / 0); }
-  100% { box-shadow: 0 0 0 0 hsl(var(--p) / 0); }
+  0%   { box-shadow: 0 0 0 0 hsl(185 100% 48% / 0.4); }
+  70%  { box-shadow: 0 0 0 12px hsl(185 100% 48% / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(185 100% 48% / 0); }
 }
 .pulse-ring { animation: pulseRing 2.5s ease-out infinite; }
 
@@ -97,78 +89,7 @@ html { scroll-behavior: smooth; }
   100% { background-position: 200% 0; }
 }
 .shimmer {
-  background: linear-gradient(90deg, transparent 0%, hsl(var(--p) / 0.08) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, hsl(185 100% 48% / 0.08) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 3s ease-in-out infinite;
-}
-
-/* Animated gradient text (hero name) */
-@keyframes textGradient {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-.gradient-text {
-  background: linear-gradient(90deg, hsl(var(--p)), #fff 45%, hsl(var(--p2)) 90%, hsl(var(--p)));
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: textGradient 6s ease infinite;
-}
-
-/* Blinking caret for typing effect */
-@keyframes caretBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.caret { animation: caretBlink 1s step-end infinite; }
-
-/* Floating profile photo */
-@keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-14px); }
-}
-.floaty { animation: floaty 6s ease-in-out infinite; }
-
-/* Morphing blob border-radius */
-@keyframes blobMorph {
-  0%, 100% { border-radius: 47% 53% 60% 40% / 45% 50% 50% 55%; }
-  33%      { border-radius: 60% 40% 45% 55% / 55% 45% 55% 45%; }
-  66%      { border-radius: 40% 60% 55% 45% / 50% 60% 40% 50%; }
-}
-.blob { animation: blobMorph 12s ease-in-out infinite; }
-
-/* Infinite marquee */
-@keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee-track { animation: marqueeScroll 28s linear infinite; }
-.marquee-mask {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-}
-
-/* Staggered reveal on load */
-@keyframes riseIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
-.rise { opacity: 0; animation: riseIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-
-/* Premium aurora — slow-drifting color fields behind the content */
-@keyframes auroraA {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(6%, 5%, 0) scale(1.18); }
-}
-@keyframes auroraB {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
-  50%      { transform: translate3d(-7%, -4%, 0) scale(1.22); }
-}
-@keyframes auroraC {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(5%, -6%, 0) scale(1.25); }
-}
-.aurora-a { animation: auroraA 20s ease-in-out infinite; }
-.aurora-b { animation: auroraB 26s ease-in-out infinite; }
-.aurora-c { animation: auroraC 32s ease-in-out infinite; }
-
-@media (prefers-reduced-motion: reduce) {
-  .gradient-text, .caret, .floaty, .blob, .marquee-track, .rise, .fade-up, .pulse-ring, .shimmer,
-  .aurora-a, .aurora-b, .aurora-c {
-    animation: none !important;
-  }
-  .rise { opacity: 1; }
 }
