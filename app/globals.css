@@ -1,7 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @layer base {
   :root {
+    --font-plus-jakarta: "Plus Jakarta Sans";
+    --font-syne: "Syne";
     --background: 210 100% 4%;
     --foreground: 195 80% 95%;
     --card: 210 60% 8%;

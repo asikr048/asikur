@@ -2,14 +2,24 @@
 import { useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+export const CARD_PALETTE = [
+  "185 100% 48%",
+  "210 100% 56%",
+  "265 89% 66%",
+  "330 85% 60%",
+  "160 84% 39%",
+  "38 92% 50%",
+];
+
 interface Props {
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
   depth?: number;
+  accent?: string;
 }
 
-export default function GlassCard({ children, className, style, depth = 8 }: Props) {
+export default function GlassCard({ children, className, style, depth = 8, accent }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
@@ -34,9 +44,9 @@ export default function GlassCard({ children, className, style, depth = 8 }: Pro
         background: "hsl(210 60% 8% / 0.5)",
         backdropFilter: "blur(24px)",
         WebkitBackdropFilter: "blur(24px)",
-        border: `1px solid hsl(185 100% 48% / ${hovered ? 0.2 : 0.08})`,
+        border: `1px solid hsl(${accent ?? "185 100% 48%"} / ${hovered ? 0.2 : 0.08})`,
         boxShadow: hovered
-          ? "0 20px 60px rgba(0,0,0,0.4), 0 0 30px hsl(185 100% 48% / 0.06)"
+          ? `0 20px 60px rgba(0,0,0,0.4), 0 0 30px hsl(${accent ?? "185 100% 48%"} / 0.06)`
           : "0 8px 32px rgba(0,0,0,0.3)",
         transition: "transform 0.15s ease, box-shadow 0.3s ease, border-color 0.3s ease",
         ...style,
