@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import {
   MapPin, Mail, Phone, Github, Linkedin, Twitter, Instagram,
-  Youtube, Dribbble, Globe, FileText, Settings2,
+  Youtube, Dribbble, Globe, FileText,
   GraduationCap, Briefcase, Award, Code2, Zap, Users, Star,
+  Heart, Languages, Sparkles, Pencil,
 } from "lucide-react";
 import { useSiteConfig } from "@/lib/hooks/useSiteConfig";
 import GlassCard, { CARD_PALETTE } from "@/components/GlassCard";
@@ -94,15 +94,15 @@ export default function PersonalPage() {
 
           {/* Profile card */}
           <GlassCard className="md:col-span-1 rounded-2xl p-6 flex flex-col items-center text-center gap-4 relative" depth={6}>
-            {/* Admin login */}
-            <Link
-              href="https://asikur-mocha.vercel.app/admin/dashboard"
-              target="_blank" rel="noopener noreferrer" title="Admin Panel"
+            {/* Admin link */}
+            <a
+              href="/admin/dashboard"
+              title="Edit in Admin Panel"
               className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium font-syne transition-all duration-200 hover:scale-105"
               style={{ background: "hsl(var(--p) / 0.1)", border: "1px solid hsl(var(--p) / 0.25)", color: "hsl(var(--p))" }}
             >
-              <Settings2 size={10} /> Admin
-            </Link>
+              <Pencil size={10} /> Edit
+            </a>
 
             {/* Avatar */}
             <div className="w-20 h-20 rounded-2xl overflow-hidden"
@@ -127,12 +127,90 @@ export default function PersonalPage() {
               <p className="text-white/45 text-xs leading-relaxed">{cfg.aboutText}</p>
             )}
 
-            {/* Status badge */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs w-fit"
-              style={{ background: "hsl(142 70% 45% / 0.1)", border: "1px solid hsl(142 70% 45% / 0.3)" }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#22c55e", boxShadow: "0 0 6px #22c55e" }} />
-              <span className="text-white/60">Open to work</span>
-            </div>
+            {/* Availability status badge */}
+            {(() => {
+              const color = cfg.availabilityColor === "amber"
+                ? { bg: "hsl(40 96% 54% / 0.1)", border: "hsl(40 96% 54% / 0.3)", dot: "#f59e0b", glow: "#f59e0b" }
+                : cfg.availabilityColor === "red"
+                ? { bg: "hsl(0 84% 60% / 0.1)", border: "hsl(0 84% 60% / 0.3)", dot: "#ef4444", glow: "#ef4444" }
+                : { bg: "hsl(142 70% 45% / 0.1)", border: "hsl(142 70% 45% / 0.3)", dot: "#22c55e", glow: "#22c55e" };
+              return (
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs w-fit"
+                  style={{ background: color.bg, border: `1px solid ${color.border}` }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: color.dot, boxShadow: `0 0 6px ${color.glow}` }} />
+                  <span className="text-white/60">{cfg.availabilityStatus || "Open to work"}</span>
+                </div>
+              );
+            })()}
+
+            {/* Currently working on */}
+            {cfg.currentlyWorkingOn && (
+              <div className="w-full rounded-xl px-3 py-2.5 text-left"
+                style={{ background: "hsl(var(--p) / 0.06)", border: "1px solid hsl(var(--p) / 0.12)" }}>
+                <p className="text-white/30 text-[9px] uppercase tracking-widest font-syne mb-1 flex items-center gap-1">
+                  <Sparkles size={9} /> Currently working on
+                </p>
+                <p className="text-white/65 text-xs leading-relaxed">{cfg.currentlyWorkingOn}</p>
+              </div>
+            )}
+
+            {/* Personality tags */}
+            {cfg.personalityTags && (
+              <div className="w-full text-left">
+                <p className="text-white/25 text-[9px] uppercase tracking-widest font-syne mb-2 flex items-center gap-1">
+                  <Star size={9} /> Traits
+                </p>
+                <div className="flex flex-wrap gap-1.5 justify-start">
+                  {cfg.personalityTags.split(",").map(t => t.trim()).filter(Boolean).map(tag => (
+                    <span key={tag}
+                      className="px-2 py-0.5 rounded-full text-[10px]"
+                      style={{ background: "hsl(var(--p2) / 0.08)", color: "hsl(var(--p2))", border: "1px solid hsl(var(--p2) / 0.18)" }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Interests */}
+            {cfg.interests && (
+              <div className="w-full text-left">
+                <p className="text-white/25 text-[9px] uppercase tracking-widest font-syne mb-2 flex items-center gap-1">
+                  <Heart size={9} /> Interests
+                </p>
+                <div className="flex flex-wrap gap-1.5 justify-start">
+                  {cfg.interests.split(",").map(t => t.trim()).filter(Boolean).map(interest => (
+                    <span key={interest}
+                      className="px-2 py-0.5 rounded-full text-[10px]"
+                      style={{ background: "hsl(var(--p) / 0.08)", color: "hsl(195 70% 75%)", border: "1px solid hsl(var(--p) / 0.15)" }}>
+                      {interest}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Languages */}
+            {cfg.languages && (
+              <div className="w-full text-left">
+                <p className="text-white/25 text-[9px] uppercase tracking-widest font-syne mb-2 flex items-center gap-1">
+                  <Languages size={9} /> Languages
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {cfg.languages.split(",").map(l => l.trim()).filter(Boolean).map(lang => {
+                    const [name, ...rest] = lang.split("(");
+                    const level = rest.join("(").replace(")", "").trim();
+                    return (
+                      <div key={lang} className="flex items-center justify-between px-3 py-1.5 rounded-xl"
+                        style={{ background: "hsl(var(--p) / 0.05)", border: "1px solid hsl(var(--p) / 0.1)" }}>
+                        <span className="text-white/60 text-xs">{name.trim()}</span>
+                        {level && <span className="text-[10px]" style={{ color: "hsl(var(--p))" }}>{level}</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Contact links */}
             <div className="w-full flex flex-col gap-2 mt-auto">
