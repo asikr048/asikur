@@ -33,9 +33,17 @@ export default function HomePage() {
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-3 fade-up">
 
         {/* ── Profile card ── */}
-        <GlassCard className="col-span-1 rounded-2xl p-6 flex flex-col gap-4" depth={6}>
+        <GlassCard className="col-span-1 rounded-2xl p-6 flex flex-col gap-4 relative" depth={6}>
+          {/* Admin button – top-left corner */}
+          <Link href="/admin/login"
+            className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium transition-all duration-200 hover:scale-105 z-10"
+            style={{ background: "hsl(185 100% 48% / 0.08)", color: "hsl(185,100%,55%)", border: "1px solid hsl(185 100% 48% / 0.18)" }}
+            title="Admin Panel">
+            ⚙ Admin
+          </Link>
+
           {/* Avatar */}
-          <div className="relative w-14 h-14">
+          <div className="relative w-14 h-14 mt-4">
             <div className="w-14 h-14 rounded-2xl overflow-hidden"
               style={{ border: "2px solid hsl(185 100% 48% / 0.3)", background: "hsl(210 60% 12%)" }}>
               {cfg.photoURL
