@@ -4,7 +4,8 @@ import {
   MapPin, Mail, Phone, Github, Linkedin, Twitter, Instagram,
   Youtube, Dribbble, Globe, FileText,
   GraduationCap, Briefcase, Award, Code2, Zap, Users, Star,
-  Heart, Languages, Sparkles, Pencil,
+  Heart, Languages, Sparkles, Pencil, Clock, Calendar, Sun, Moon,
+  Navigation, Building2,
 } from "lucide-react";
 import { useSiteConfig } from "@/lib/hooks/useSiteConfig";
 import GlassCard, { CARD_PALETTE } from "@/components/GlassCard";
@@ -41,6 +42,93 @@ function Counter({ value }: { value: string }) {
 
   if (!parts) return <>{value}</>;
   return <>{parts[1]}{shown}{parts[3]}</>;
+}
+
+// ── Local time clock ──
+function useLocalTime(timezone?: string) {
+  const [time, setTime] = useState<Date>(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+function LocalTimeBadge({ location, timezone }: { location?: string; timezone?: string }) {
+  const now = useLocalTime(timezone);
+  const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: tz, hour12: true });
+  const dateStr = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: tz });
+  const hour = parseInt(now.toLocaleTimeString("en-US", { hour: "2-digit", hour12: false, timeZone: tz }));
+  const isDaytime = hour >= 6 && hour < 20;
+  const tzShort = (() => { try { return new Intl.DateTimeFormat("en", { timeZoneName: "short", timeZone: tz }).formatToParts(now).find(p => p.type === "timeZoneName")?.value ?? tz; } catch { return tz; } })();
+
+  return (
+    <div className="w-full rounded-2xl overflow-hidden"
+      style={{ background: "linear-gradient(135deg, hsl(210 60% 8% / 0.8), hsl(210 60% 5% / 0.6))", border: "1px solid hsl(var(--p) / 0.15)" }}>
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-3 py-2"
+        style={{ borderBottom: "1px solid hsl(var(--p) / 0.08)", background: "hsl(var(--p) / 0.05)" }}>
+        <div className="flex items-center gap-1.5">
+          <Navigation size={10} style={{ color: "hsl(var(--p))" }} />
+          <span className="text-[9px] uppercase tracking-widest font-syne" style={{ color: "hsl(var(--p))" }}>Location</span>
+        </div>
+        <div className="flex items-center gap-1">
+          {isDaytime
+            ? <Sun size={10} style={{ color: "#f59e0b" }} />
+            : <Moon size={10} style={{ color: "#818cf8" }} />}
+          <span className="text-[9px]" style={{ color: isDaytime ? "#f59e0b" : "#818cf8" }}>{isDaytime ? "Day" : "Night"}</span>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="px-3 py-3 flex flex-col gap-2.5">
+        {/* Location name */}
+        {location && (
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: "hsl(var(--p) / 0.12)", border: "1px solid hsl(var(--p) / 0.2)" }}>
+              <MapPin size={11} style={{ color: "hsl(var(--p))" }} />
+            </div>
+            <span className="text-white/70 text-xs font-medium">{location}</span>
+          </div>
+        )}
+
+        {/* Time display */}
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-white font-bold text-2xl font-syne leading-none tracking-tight">{timeStr}</p>
+            <p className="text-white/35 text-[10px] mt-1 flex items-center gap-1">
+              <Calendar size={8} />{dateStr}
+            </p>
+          </div>
+          <div className="text-right">
+            <div className="px-2 py-0.5 rounded-lg text-[9px] font-mono"
+              style={{ background: "hsl(var(--p) / 0.1)", color: "hsl(var(--p))", border: "1px solid hsl(var(--p) / 0.2)" }}>
+              {tzShort}
+            </div>
+          </div>
+        </div>
+
+        {/* Time bars — hour progress */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-white/20 text-[8px] uppercase tracking-widest">Day progress</span>
+            <span className="text-white/25 text-[8px]">{Math.round(((hour * 60 + now.getMinutes()) / 1440) * 100)}%</span>
+          </div>
+          <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: "hsl(210 60% 12%)" }}>
+            <div className="h-full rounded-full transition-all duration-1000"
+              style={{
+                width: `${((hour * 60 + now.getMinutes()) / 1440) * 100}%`,
+                background: isDaytime
+                  ? "linear-gradient(90deg, hsl(185 100% 48%), hsl(45 95% 55%))"
+                  : "linear-gradient(90deg, hsl(205 90% 56%), hsl(270 80% 65%))",
+              }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const TYPE_ICON: Record<string, typeof Briefcase> = {
@@ -209,6 +297,35 @@ export default function PersonalPage() {
                     );
                   })}
                 </div>
+              </div>
+            )}
+
+            {/* ── Local time & place card ── */}
+            <LocalTimeBadge location={cfg.location} />
+
+            {/* ── Quick info row ── */}
+            {(cfg.age || cfg.location) && (
+              <div className="w-full grid grid-cols-2 gap-2">
+                {cfg.location && (
+                  <div className="rounded-xl px-3 py-2.5 flex flex-col gap-1"
+                    style={{ background: "hsl(185 100% 48% / 0.06)", border: "1px solid hsl(185 100% 48% / 0.15)" }}>
+                    <div className="flex items-center gap-1">
+                      <Building2 size={9} style={{ color: "hsl(185 100% 48%)" }} />
+                      <span className="text-[8px] uppercase tracking-widest font-syne" style={{ color: "hsl(185 100% 48%)" }}>Based in</span>
+                    </div>
+                    <p className="text-white/65 text-[11px] font-medium leading-tight">{cfg.location}</p>
+                  </div>
+                )}
+                {cfg.age && (
+                  <div className="rounded-xl px-3 py-2.5 flex flex-col gap-1"
+                    style={{ background: "hsl(270 80% 65% / 0.06)", border: "1px solid hsl(270 80% 65% / 0.15)" }}>
+                    <div className="flex items-center gap-1">
+                      <Calendar size={9} style={{ color: "hsl(270 80% 65%)" }} />
+                      <span className="text-[8px] uppercase tracking-widest font-syne" style={{ color: "hsl(270 80% 65%)" }}>Age</span>
+                    </div>
+                    <p className="text-white/65 text-[11px] font-medium">{cfg.age}</p>
+                  </div>
+                )}
               </div>
             )}
 
