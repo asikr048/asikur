@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useDeferredValue } from "react";
 import { useRouter } from "next/navigation";
 import {
   User, Briefcase, FolderOpen, Code, Lock, LogOut, Save, Plus, Trash2,
@@ -102,6 +102,9 @@ function SaveBtn({ onClick, saving, label }: { onClick: () => void; saving?: boo
 export default function AdminDashboard() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("profile");
+  // Nav highlight uses `tab` (instant); heavy tab content renders from this
+  // deferred value so clicking a tab paints immediately instead of blocking.
+  const deferredTab = useDeferredValue(tab);
 
   const [config, setConfig] = useState<SiteConfig>(DEFAULT_CONFIG);
   const [savingConfig, setSavingConfig] = useState(false);
@@ -287,7 +290,7 @@ export default function AdminDashboard() {
       <main className="flex-1 overflow-y-auto p-8">
 
         {/* ── Profile ── */}
-        {tab === "profile" && (
+        {deferredTab === "profile" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-1">Profile</h2>
             <p className="text-white/35 text-xs mb-6">Your identity, contact details, and links — shown across the site.</p>
@@ -382,7 +385,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Home Hero ── */}
-        {tab === "home" && (
+        {deferredTab === "home" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-1">Home Hero</h2>
             <p className="text-white/35 text-xs mb-6">The big landing section: typing roles, stat counters, and the tech marquee.</p>
@@ -425,7 +428,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Design ── */}
-        {tab === "design" && (
+        {deferredTab === "design" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-1">Design & Theme</h2>
             <p className="text-white/35 text-xs mb-6">Rebrand the whole site — colors apply across every page after saving + refresh.</p>
@@ -489,7 +492,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── SEO ── */}
-        {tab === "seo" && (
+        {deferredTab === "seo" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-1">SEO & Sharing</h2>
             <p className="text-white/35 text-xs mb-6">Controls the browser title, search snippets, favicon, and social preview cards.</p>
@@ -509,7 +512,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Projects ── */}
-        {tab === "projects" && (
+        {deferredTab === "projects" && (
           <div className="max-w-3xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-white font-bold text-lg font-syne">Projects</h2>
@@ -574,7 +577,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Career ── */}
-        {tab === "career" && (
+        {deferredTab === "career" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-6">Career</h2>
             <div className="flex flex-col gap-1.5 mb-5">
@@ -610,7 +613,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Skills ── */}
-        {tab === "skills" && (
+        {deferredTab === "skills" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-6">Skills</h2>
             {skillGroups.map((group, gi) => (
@@ -632,7 +635,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Highlights (Beyond Code) ── */}
-        {tab === "highlights" && (
+        {deferredTab === "highlights" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-1">Beyond Code Highlights</h2>
             <p className="text-white/35 text-xs mb-6">Editable cards that fill the open space on the About / Personal page. Add interests, values, or fun facts — each with its own icon.</p>
@@ -685,7 +688,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Services ── */}
-        {tab === "services" && (
+        {deferredTab === "services" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-6">Services</h2>
             <div className="flex flex-col gap-1.5 mb-5">
@@ -713,7 +716,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Testimonials ── */}
-        {tab === "testimonials" && (
+        {deferredTab === "testimonials" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-6">Testimonials</h2>
             <div className="flex flex-col gap-1.5 mb-5">
@@ -743,7 +746,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── AI Settings ── */}
-        {tab === "ai" && (
+        {deferredTab === "ai" && (
           <div className="max-w-2xl">
             <h2 className="text-white font-bold text-lg font-syne mb-1">AI Settings</h2>
             <p className="text-white/35 text-xs mb-6">Configure the AI assistant that powers the &quot;Ask AI&quot; chat on your portfolio.</p>
@@ -807,7 +810,7 @@ export default function AdminDashboard() {
         )}
 
         {/* ── Password ── */}
-        {tab === "password" && (
+        {deferredTab === "password" && (
           <div className="max-w-sm">
             <h2 className="text-white font-bold text-lg font-syne mb-6">Change Password</h2>
             <form onSubmit={changePassword} className="flex flex-col gap-4 p-5 rounded-2xl" style={{ background: "hsl(210 60% 8% / 0.6)", border: "1px solid hsl(var(--p) / 0.1)" }}>
