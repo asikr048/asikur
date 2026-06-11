@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useSiteConfig } from "@/lib/hooks/useSiteConfig";
 import GlassCard, { CARD_PALETTE } from "@/components/GlassCard";
+import { highlightIcon, type HighlightsData } from "@/lib/highlightIcons";
 
 interface SkillGroup { name: string; items: string[]; }
 interface SkillsData { groups: SkillGroup[]; }
@@ -141,10 +142,12 @@ export default function PersonalPage() {
   const cfg = useSiteConfig();
   const [skills, setSkills] = useState<SkillsData | null>(null);
   const [career, setCareer] = useState<CareerData | null>(null);
+  const [highlights, setHighlights] = useState<HighlightsData | null>(null);
 
   useEffect(() => {
     fetch("/api/skills").then(r => r.json()).then(setSkills).catch(() => {});
     fetch("/api/career").then(r => r.json()).then(setCareer).catch(() => {});
+    fetch("/api/highlights").then(r => r.json()).then(setHighlights).catch(() => {});
   }, []);
 
   const contacts = [
@@ -361,6 +364,36 @@ export default function PersonalPage() {
                 </GlassCard>
               );
             })}
+
+            {/* ── Beyond Code — editable highlight cards (fills the column) ── */}
+            {highlights && highlights.items.length > 0 && (
+              <div className="flex flex-col gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-widest font-syne flex items-center gap-1.5" style={{ color: "hsl(var(--p))" }}>
+                    <Sparkles size={11} /> {highlights.title || "Beyond Code"}
+                  </p>
+                  {highlights.intro && <p className="text-white/40 text-xs mt-1">{highlights.intro}</p>}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {highlights.items.map((item, i) => {
+                    const accent = CARD_PALETTE[i % CARD_PALETTE.length];
+                    const Icon = highlightIcon(item.icon);
+                    return (
+                      <GlassCard key={item.id} accent={accent} className="rounded-2xl p-4 flex items-start gap-3" depth={6}>
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: `hsl(${accent} / 0.12)`, border: `1px solid hsl(${accent} / 0.3)`, boxShadow: `0 0 14px hsl(${accent} / 0.15)` }}>
+                          <Icon size={18} style={{ color: `hsl(${accent})` }} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-white/90 text-sm font-semibold font-syne leading-tight">{item.title}</p>
+                          {item.description && <p className="text-white/45 text-xs mt-1 leading-relaxed">{item.description}</p>}
+                        </div>
+                      </GlassCard>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
