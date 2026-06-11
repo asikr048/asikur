@@ -398,6 +398,51 @@ export default function PersonalPage() {
                 </GlassCard>
               );
             })}
+
+            {/* ── Career & Education (moved beside the profile card) ── */}
+            {timeline.length > 0 && (
+              <GlassCard className="rounded-2xl p-6" depth={5}>
+                <p className="text-xs uppercase tracking-widest mb-5 font-syne" style={{ color: "hsl(var(--p))" }}>
+                  Career &amp; Education
+                </p>
+                <div className="relative flex flex-col gap-0">
+                  {/* vertical line */}
+                  <div className="absolute left-[18px] top-3 bottom-3 w-px"
+                    style={{ background: "linear-gradient(180deg, hsl(var(--p) / 0.5), hsl(var(--p2) / 0.2))" }} />
+
+                  {timeline.map((item, i) => {
+                    const Icon = TYPE_ICON[item.type] ?? Briefcase;
+                    const accent = CARD_PALETTE[i % CARD_PALETTE.length];
+                    return (
+                      <div key={item.id} className="relative flex items-start gap-4 pb-5 last:pb-0 group">
+                        {/* dot + icon */}
+                        <div className="relative z-10 flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                          style={{
+                            background: `hsl(${accent} / 0.15)`,
+                            border: `1px solid hsl(${accent} / 0.35)`,
+                            boxShadow: `0 0 12px hsl(${accent} / 0.15)`,
+                          }}>
+                          <Icon size={15} style={{ color: `hsl(${accent})` }} />
+                        </div>
+                        {/* text */}
+                        <div className="flex-1 pt-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            <p className="text-white/85 text-sm font-semibold font-syne leading-tight">{item.title}</p>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0"
+                              style={{ background: `hsl(${accent} / 0.12)`, color: `hsl(${accent})`, border: `1px solid hsl(${accent} / 0.2)` }}>
+                              {item.years}
+                            </span>
+                          </div>
+                          <p className="text-white/40 text-xs mt-0.5">{item.org}
+                            <span className="ml-2 opacity-60">· {item.type}</span>
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </GlassCard>
+            )}
           </div>
         </div>
 
@@ -418,53 +463,6 @@ export default function PersonalPage() {
                 <p className="text-white/40 text-[11px] mt-0.5 leading-tight">{stats[i].label}</p>
               </GlassCard>
             ))}
-          </div>
-        )}
-
-        {/* ── Career timeline ── */}
-        {timeline.length > 0 && (
-          <div className="mt-4">
-            <GlassCard className="rounded-2xl p-6" depth={5}>
-              <p className="text-xs uppercase tracking-widest mb-5 font-syne" style={{ color: "hsl(var(--p))" }}>
-                Career &amp; Education
-              </p>
-              <div className="relative flex flex-col gap-0">
-                {/* vertical line */}
-                <div className="absolute left-[18px] top-3 bottom-3 w-px"
-                  style={{ background: "linear-gradient(180deg, hsl(var(--p) / 0.5), hsl(var(--p2) / 0.2))" }} />
-
-                {timeline.map((item, i) => {
-                  const Icon = TYPE_ICON[item.type] ?? Briefcase;
-                  const accent = CARD_PALETTE[i % CARD_PALETTE.length];
-                  return (
-                    <div key={item.id} className="relative flex items-start gap-4 pb-5 last:pb-0 group">
-                      {/* dot + icon */}
-                      <div className="relative z-10 flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                        style={{
-                          background: `hsl(${accent} / 0.15)`,
-                          border: `1px solid hsl(${accent} / 0.35)`,
-                          boxShadow: `0 0 12px hsl(${accent} / 0.15)`,
-                        }}>
-                        <Icon size={15} style={{ color: `hsl(${accent})` }} />
-                      </div>
-                      {/* text */}
-                      <div className="flex-1 pt-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 flex-wrap">
-                          <p className="text-white/85 text-sm font-semibold font-syne leading-tight">{item.title}</p>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0"
-                            style={{ background: `hsl(${accent} / 0.12)`, color: `hsl(${accent})`, border: `1px solid hsl(${accent} / 0.2)` }}>
-                            {item.years}
-                          </span>
-                        </div>
-                        <p className="text-white/40 text-xs mt-0.5">{item.org}
-                          <span className="ml-2 opacity-60">· {item.type}</span>
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </GlassCard>
           </div>
         )}
 
