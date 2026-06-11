@@ -345,8 +345,42 @@ export default function PersonalPage() {
             </div>
           </GlassCard>
 
-          {/* Skills */}
+          {/* Right column — Beyond Code highlights fill the upper area, skills below */}
           <div className="md:col-span-2 flex flex-col gap-4">
+
+            {/* ── Beyond Code — editable highlight cards (fills the upper-right) ── */}
+            {highlights && highlights.items.length > 0 && (
+              <GlassCard className="rounded-2xl p-5 md:p-6" depth={6}>
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-widest font-syne flex items-center gap-1.5" style={{ color: "hsl(var(--p))" }}>
+                    <Sparkles size={12} /> {highlights.title || "Beyond Code"}
+                  </p>
+                  {highlights.intro && <p className="text-white/45 text-sm mt-1.5">{highlights.intro}</p>}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {highlights.items.map((item, i) => {
+                    const accent = CARD_PALETTE[i % CARD_PALETTE.length];
+                    const Icon = highlightIcon(item.icon);
+                    return (
+                      <div key={item.id}
+                        className="rounded-xl p-4 flex items-start gap-3 transition-all duration-300 hover:scale-[1.02]"
+                        style={{ background: `linear-gradient(150deg, hsl(${accent} / 0.1), hsl(210 60% 8% / 0.5))`, border: `1px solid hsl(${accent} / 0.22)` }}>
+                        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: `hsl(${accent} / 0.14)`, border: `1px solid hsl(${accent} / 0.32)`, boxShadow: `0 0 16px hsl(${accent} / 0.18)` }}>
+                          <Icon size={20} style={{ color: `hsl(${accent})` }} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-white/90 text-sm font-semibold font-syne leading-tight">{item.title}</p>
+                          {item.description && <p className="text-white/50 text-xs mt-1 leading-relaxed">{item.description}</p>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </GlassCard>
+            )}
+
+            {/* Skills */}
             {skills?.groups.map((group, gi) => {
               const accent = CARD_PALETTE[gi % CARD_PALETTE.length];
               return (
@@ -364,36 +398,6 @@ export default function PersonalPage() {
                 </GlassCard>
               );
             })}
-
-            {/* ── Beyond Code — editable highlight cards (fills the column) ── */}
-            {highlights && highlights.items.length > 0 && (
-              <div className="flex flex-col gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-widest font-syne flex items-center gap-1.5" style={{ color: "hsl(var(--p))" }}>
-                    <Sparkles size={11} /> {highlights.title || "Beyond Code"}
-                  </p>
-                  {highlights.intro && <p className="text-white/40 text-xs mt-1">{highlights.intro}</p>}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {highlights.items.map((item, i) => {
-                    const accent = CARD_PALETTE[i % CARD_PALETTE.length];
-                    const Icon = highlightIcon(item.icon);
-                    return (
-                      <GlassCard key={item.id} accent={accent} className="rounded-2xl p-4 flex items-start gap-3" depth={6}>
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ background: `hsl(${accent} / 0.12)`, border: `1px solid hsl(${accent} / 0.3)`, boxShadow: `0 0 14px hsl(${accent} / 0.15)` }}>
-                          <Icon size={18} style={{ color: `hsl(${accent})` }} />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-white/90 text-sm font-semibold font-syne leading-tight">{item.title}</p>
-                          {item.description && <p className="text-white/45 text-xs mt-1 leading-relaxed">{item.description}</p>}
-                        </div>
-                      </GlassCard>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
